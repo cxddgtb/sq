@@ -523,6 +523,15 @@
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1
+    },
+    {
+      "key": "caiji.maotaizy.cc",
+      "name": "caiji.maotaizy.cc",
+      "type": 0,
+      "api": "https://caiji.maotaizy.cc/api.php/provide/vod/at/xml/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
     }
   ],
   "parses": [
