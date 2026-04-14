@@ -5,8 +5,11 @@ from xml.etree.ElementTree import ParseError
 import os
 from datetime import datetime
 
-# ==================== 配置区（无需修改，可后续通过 candidates.txt 扩展）====================
+# ==================== 配置区（已智能扩展，无需修改）====================
+# 通过 GitHub 多仓库 + 搜索引擎实时提取（2026-04-14 更新）
+# 来源：Nancy0308/TVbox-interface、cluntop/tvbox、guxiangbin/tvbox2 等
 CANDIDATES = [
+    # === 原有接口（保留）===
     "https://www.msnii.com/api/xml.php",      # 美少女
     "https://www.xrbsp.com/api/xml.php",      # 淫水机
     "https://www.gdlsp.com/api/xml.php",      # 香奶儿
@@ -14,7 +17,33 @@ CANDIDATES = [
     "https://www.pgxdy.com/api/xml.php",      # 黄AV
     "https://www.52av.one/api/xml.php",       # 52AV
     "https://www.avtt.me/api/xml.php",        # AVTT
-    # 如需更多接口，请在仓库根目录新建 candidates.txt（一行一个URL），无需修改本文件
+
+    # === 新增接口（智能发现）===
+    "https://www.afasu.com/api/xml.php",      # 阿法苏
+    "https://apittzy.com/api.php/provide/vod/at/xml",   # 爱片天堂
+    "https://api.xiuseapi.com/api.php/provide/vod/at/xml",  # 秀色API
+    "http://www.ggmmzy.com:9999/inc/xml",     # 哥哥妹妹资源
+    "https://www.caiji03.com/home/cjapi/cfg8/mc10/vod/xml",
+    "https://www.caiji02.com/home/cjapi/cfas/mc10/vod/xml",
+    "https://www.caiji04.com/home/cjapi/cfc7/mc10/vod/xml",
+    "https://www.caiji22.com/home/cjapi/klp0/mc10/vod/xml",
+    "https://www.caiji23.com/home/cjapi/kls6/mc10/vod/xml",
+    "https://www.caiji24.com/home/cjapi/p0d2/mc10/vod/xml",
+    "https://www.caiji25.com/home/cjapi/p0as/mc10/vod/xml",
+    "http://caiji26.com/home/cjapi/p0g8/mc10/vod/xml",
+    "https://jgczyapi.com/home/cjapi/kld2/mc10/vod/xml",
+    "https://xx55zyapi.com/home/cjapi/ascf/mc10/vod/xml",
+    "https://www.dmmapi.com/home/cjapi/asd2c7/mc10/vod/xml",
+    "https://www.caiji10.com/home/cjapi/cfs6/mc10/vod/xml",
+    "https://www.caiji09.com/home/cjapi/cfp0/mc10/vod/xml",
+    "https://www.caiji08.com/home/cjapi/cfkl/mc10/vod/xml",
+    "https://www.caiji07.com/home/cjapi/cfcf/mc10/vod/xml",
+    "https://www.caiji06.com/home/cjapi/cfbb/mc10/vod/xml",
+    "https://www.caiji05.com/home/cjapi/cfda/mc10/vod/xml",
+    "https://www.caiji01.com/home/cjapi/cfd2/mc10/vod/xml",
+    "https://52zyapi.com/home/cjapi/asda/mc10/vod/xml",
+    "http://www.caiji21.com/home/cjapi/klkl/mc10/vod/xml",
+    # 如需继续扩展：仓库根目录新建 candidates.txt（一行一个URL），脚本自动读取，无需改代码
 ]
 
 # 官方模板地址（自动修复 JSON 损坏）
@@ -38,7 +67,6 @@ def load_template():
         resp = requests.get(TEMPLATE_URL, timeout=30)
         resp.raise_for_status()
         data = resp.json()
-        # 写回本地，下次无需再拉
         with open("video.json", "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
         print("✅ 已自动修复并保存官方模板")
@@ -59,7 +87,6 @@ def test_api(api_url: str) -> bool:
         if not content or not content.startswith("<"):
             return False
 
-        # 严格 XML 解析
         try:
             root = ET.fromstring(content.encode("utf-8"))
             if (root.tag == "rss" or 
@@ -69,7 +96,6 @@ def test_api(api_url: str) -> bool:
                 root.findall(".//list")):
                 return True
         except ParseError:
-            # 非严格 XML 时关键词兜底
             lower = content.lower()
             if any(k in lower for k in ["rss", "channel", "category", "video", "list"]):
                 return True
@@ -96,9 +122,8 @@ for item in data.get("sites", []) + [{"api": url} for url in CANDIDATES]:
 
     print(f"测试接口: {api}")
     if test_api(api):
-        # 标准化 site 对象（完全匹配原始 video.json 格式）
         site_dict = {
-            "key": api.split("/")[2].replace("www.", "").replace(".com", "").replace(".net", ""),
+            "key": api.split("/")[2].replace("www.", "").replace(".com", "").replace(".net", "").replace(":9999", ""),
             "name": api.split("/")[2].replace("www.", ""),
             "type": 0,
             "api": api,
@@ -106,7 +131,6 @@ for item in data.get("sites", []) + [{"api": url} for url in CANDIDATES]:
             "quickSearch": 1,
             "filterable": 1
         }
-        # 保留原 item 中其他自定义字段
         if isinstance(item, dict):
             site_dict.update({k: v for k, v in item.items() if k not in ["key", "name", "api"]})
         working_sites.append(site_dict)
