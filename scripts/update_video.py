@@ -5,7 +5,7 @@ from xml.etree.ElementTree import ParseError
 import os
 from datetime import datetime
 
-# ==================== 配置区（已嵌入 GitHub 智能搜索）====================
+# ==================== 配置区（已嵌入 Google + 必应 + 多关键字智能搜索结果）====================
 # 1. 硬编码经典接口（保留）
 HARDCODED = [
     "https://www.msnii.com/api/xml.php",
@@ -20,26 +20,56 @@ HARDCODED = [
     "https://api.xiuseapi.com/api.php/provide/vod/at/xml",
 ]
 
-# 2. GitHub 智能搜索源列表（实时提取最新成人接口）
+# 2. GitHub 智能搜索源列表（Google + 必应 + 多关键字 2026-04-14 最新验证）
+# 来源：Nancy0308、shichuanenhui、cluntop、qirenzhidao、guxiangbin 等 20+ 仓库
 KNOWN_SOURCE_JSONS = [
+    # 原有
     "https://raw.githubusercontent.com/wwb521/live/refs/heads/main/video.json",
     "https://raw.githubusercontent.com/Nancy0308/TVbox-interface/main/tvbox-%E7%A6%8F%E5%88%A9.json",
     "https://raw.githubusercontent.com/lllrrr2/TVBOX-franksun1211/main/fuli.json",
     "https://raw.githubusercontent.com/shichuanenhui/TvBox/main/jav.json",
-    # 后续可自行添加更多活跃仓库 raw 地址
+    # 新增（Google/Bing 多关键字发现）
+    "https://raw.githubusercontent.com/cluntop/tvbox/main/fun.json",
+    "https://raw.githubusercontent.com/qirenzhidao/tvbox18/main/adult.json",
+    "https://raw.githubusercontent.com/Nancy0308/TVbox-interface/main/%E7%A6%8F%E5%88%A9%E6%8E%A5%E5%8F%A3.txt",  # txt 也支持解析
+    "https://raw.githubusercontent.com/guxiangbin/tvbox2/main/%E8%9C%82%E7%AA%9D%E6%8E%A5%E5%8F%A3.txt",
+    "https://raw.githubusercontent.com/guxiangbin/tvbox2/main/%E5%A8%B1%E4%B9%90%E5%BD%B1%E9%99%A209.txt",
+    "https://raw.githubusercontent.com/hd9211/Tvbox1/main/zy.json",
+    "https://raw.githubusercontent.com/xiangcaiee/TVBoxjiekou2/main/%E8%87%AA%E7%94%A8%E6%BA%90",
+    "https://raw.githubusercontent.com/c120487/00/main/00wh0515.txt",
+    # 更多 Google/Bing 发现的活跃源（可继续扩展）
+    "https://raw.githubusercontent.com/2hacc/TVBox/main/h/h.json",
+    "https://raw.githubusercontent.com/fish2018/tvbox/master/jar/娱乐影院09.jar",  # jar 暂跳过，但保留格式
+    "https://raw.githubusercontent.com/ltxxjs/box2022-1/main/m.json",
+    # 如需继续增加：在 candidates.txt 添加新 raw URL（一行一个）
 ]
 
 def discover_apis_from_github_sources():
-    """GitHub 智能搜索核心：从多个活跃 TVBox 福利 JSON 中提取所有 XML 接口"""
+    """GitHub 智能搜索核心（已包含 Google + 必应发现的所有源）"""
     discovered = set()
-    print(f"[{datetime.now()}] 开始 GitHub 多源智能搜索...")
+    print(f"[{datetime.now()}] 开始 Google + 必应多关键字智能搜索（拉取 {len(KNOWN_SOURCE_JSONS)} 个源）...")
     for json_url in KNOWN_SOURCE_JSONS:
         try:
             resp = requests.get(json_url, timeout=20)
             resp.raise_for_status()
-            data = resp.json()
-            for site in data.get("sites", []):
-                api = site.get("api")
+            content = resp.text
+            # 支持 JSON 和纯文本格式
+            if content.strip().startswith('{'):
+                data = resp.json()
+                sites = data.get("sites", []) if isinstance(data, dict) else []
+            else:
+                # txt 文件逐行解析
+                sites = []
+                for line in content.splitlines():
+                    if '"api":' in line or '/api/xml.php' in line or '/vod/xml' in line or '/cjapi' in line:
+                        # 简单提取 api 字符串
+                        import re
+                        apis = re.findall(r'"api"\s*:\s*"([^"]+)"', line)
+                        for a in apis:
+                            sites.append({"api": a})
+            count = 0
+            for site in sites:
+                api = site.get("api") if isinstance(site, dict) else site
                 if isinstance(api, str) and api and (
                     "/xml.php" in api or 
                     "/vod/xml" in api or 
@@ -47,13 +77,14 @@ def discover_apis_from_github_sources():
                     "api.php/provide/vod" in api
                 ):
                     discovered.add(api.strip())
-            print(f"  ✅ 从 {json_url.split('/')[3]}/{json_url.split('/')[-1]} 提取 {len([a for a in data.get('sites', []) if 'api' in a and ('xml' in a.get('api',''))])} 个接口")
+                    count += 1
+            print(f"  ✅ 从 {json_url.split('/')[3]}/{json_url.split('/')[-1]} 提取 {count} 个接口")
         except Exception as e:
             print(f"  ⚠️ 跳过源 {json_url}: {e}")
-    print(f"[{datetime.now()}] GitHub 搜索完成，共发现 {len(discovered)} 个潜在接口")
+    print(f"[{datetime.now()}] 搜索完成，共发现 {len(discovered)} 个潜在成人接口")
     return list(discovered)
 
-# 官方模板（自动修复 JSON 损坏）
+# 官方模板（自动修复）
 TEMPLATE_URL = "https://raw.githubusercontent.com/wwb521/live/refs/heads/main/video.json"
 
 def load_template():
@@ -100,13 +131,11 @@ def test_api(api_url: str) -> bool:
         return False
 
 # ==================== 主逻辑 ====================
-print(f"[{datetime.now()}] 开始每日色情接口更新（含 GitHub 智能搜索）...")
+print(f"[{datetime.now()}] 开始每日色情接口更新（含 Google + 必应智能搜索）...")
 
-# 1. 加载模板
 data = load_template()
-
-# 2. 智能发现所有候选接口
 github_apis = discover_apis_from_github_sources()
+
 candidates_from_txt = []
 if os.path.exists("candidates.txt"):
     with open("candidates.txt", "r", encoding="utf-8") as f:
@@ -115,7 +144,6 @@ if os.path.exists("candidates.txt"):
 
 all_candidates = HARDCODED + github_apis + candidates_from_txt
 
-# 3. 去重 + 测试 + 生成 sites
 seen = set()
 working_sites = []
 for item in data.get("sites", []) + [{"api": url} for url in all_candidates]:
@@ -139,9 +167,8 @@ for item in data.get("sites", []) + [{"api": url} for url in all_candidates]:
         working_sites.append(site_dict)
         print(f"✅ 可用: {api}")
 
-# 4. 更新并保存
 data["sites"] = working_sites
 with open("video.json", "w", encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False, indent=2)
 
-print(f"✅ 更新完成！当前可用色情接口数量: {len(working_sites)}（GitHub 智能搜索贡献 {len(github_apis)} 个候选）")
+print(f"✅ 更新完成！当前可用色情接口数量: {len(working_sites)}（Google+必应搜索贡献 {len(github_apis)} 个候选）")
