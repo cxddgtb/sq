@@ -5,52 +5,58 @@ from xml.etree.ElementTree import ParseError
 import os
 from datetime import datetime
 
-# ==================== 配置区（已智能扩展，无需修改）====================
-# 通过 GitHub 多仓库 + 搜索引擎实时提取（2026-04-14 更新）
-# 来源：Nancy0308/TVbox-interface、cluntop/tvbox、guxiangbin/tvbox2 等
-CANDIDATES = [
-    # === 原有接口（保留）===
-    "https://www.msnii.com/api/xml.php",      # 美少女
-    "https://www.xrbsp.com/api/xml.php",      # 淫水机
-    "https://www.gdlsp.com/api/xml.php",      # 香奶儿
-    "https://www.kxgav.com/api/xml.php",      # 白嫖
-    "https://www.pgxdy.com/api/xml.php",      # 黄AV
-    "https://www.52av.one/api/xml.php",       # 52AV
-    "https://www.avtt.me/api/xml.php",        # AVTT
-
-    # === 新增接口（智能发现）===
-    "https://www.afasu.com/api/xml.php",      # 阿法苏
-    "https://apittzy.com/api.php/provide/vod/at/xml",   # 爱片天堂
-    "https://api.xiuseapi.com/api.php/provide/vod/at/xml",  # 秀色API
-    "http://www.ggmmzy.com:9999/inc/xml",     # 哥哥妹妹资源
-    "https://www.caiji03.com/home/cjapi/cfg8/mc10/vod/xml",
-    "https://www.caiji02.com/home/cjapi/cfas/mc10/vod/xml",
-    "https://www.caiji04.com/home/cjapi/cfc7/mc10/vod/xml",
-    "https://www.caiji22.com/home/cjapi/klp0/mc10/vod/xml",
-    "https://www.caiji23.com/home/cjapi/kls6/mc10/vod/xml",
-    "https://www.caiji24.com/home/cjapi/p0d2/mc10/vod/xml",
-    "https://www.caiji25.com/home/cjapi/p0as/mc10/vod/xml",
-    "http://caiji26.com/home/cjapi/p0g8/mc10/vod/xml",
-    "https://jgczyapi.com/home/cjapi/kld2/mc10/vod/xml",
-    "https://xx55zyapi.com/home/cjapi/ascf/mc10/vod/xml",
-    "https://www.dmmapi.com/home/cjapi/asd2c7/mc10/vod/xml",
-    "https://www.caiji10.com/home/cjapi/cfs6/mc10/vod/xml",
-    "https://www.caiji09.com/home/cjapi/cfp0/mc10/vod/xml",
-    "https://www.caiji08.com/home/cjapi/cfkl/mc10/vod/xml",
-    "https://www.caiji07.com/home/cjapi/cfcf/mc10/vod/xml",
-    "https://www.caiji06.com/home/cjapi/cfbb/mc10/vod/xml",
-    "https://www.caiji05.com/home/cjapi/cfda/mc10/vod/xml",
-    "https://www.caiji01.com/home/cjapi/cfd2/mc10/vod/xml",
-    "https://52zyapi.com/home/cjapi/asda/mc10/vod/xml",
-    "http://www.caiji21.com/home/cjapi/klkl/mc10/vod/xml",
-    # 如需继续扩展：仓库根目录新建 candidates.txt（一行一个URL），脚本自动读取，无需改代码
+# ==================== 配置区（已嵌入 GitHub 智能搜索）====================
+# 1. 硬编码经典接口（保留）
+HARDCODED = [
+    "https://www.msnii.com/api/xml.php",
+    "https://www.xrbsp.com/api/xml.php",
+    "https://www.gdlsp.com/api/xml.php",
+    "https://www.kxgav.com/api/xml.php",
+    "https://www.pgxdy.com/api/xml.php",
+    "https://www.52av.one/api/xml.php",
+    "https://www.avtt.me/api/xml.php",
+    "https://www.afasu.com/api/xml.php",
+    "https://apittzy.com/api.php/provide/vod/at/xml",
+    "https://api.xiuseapi.com/api.php/provide/vod/at/xml",
 ]
 
-# 官方模板地址（自动修复 JSON 损坏）
+# 2. GitHub 智能搜索源列表（实时提取最新成人接口）
+KNOWN_SOURCE_JSONS = [
+    "https://raw.githubusercontent.com/wwb521/live/refs/heads/main/video.json",
+    "https://raw.githubusercontent.com/Nancy0308/TVbox-interface/main/tvbox-%E7%A6%8F%E5%88%A9.json",
+    "https://raw.githubusercontent.com/lllrrr2/TVBOX-franksun1211/main/fuli.json",
+    "https://raw.githubusercontent.com/shichuanenhui/TvBox/main/jav.json",
+    # 后续可自行添加更多活跃仓库 raw 地址
+]
+
+def discover_apis_from_github_sources():
+    """GitHub 智能搜索核心：从多个活跃 TVBox 福利 JSON 中提取所有 XML 接口"""
+    discovered = set()
+    print(f"[{datetime.now()}] 开始 GitHub 多源智能搜索...")
+    for json_url in KNOWN_SOURCE_JSONS:
+        try:
+            resp = requests.get(json_url, timeout=20)
+            resp.raise_for_status()
+            data = resp.json()
+            for site in data.get("sites", []):
+                api = site.get("api")
+                if isinstance(api, str) and api and (
+                    "/xml.php" in api or 
+                    "/vod/xml" in api or 
+                    "/cjapi" in api.lower() or 
+                    "api.php/provide/vod" in api
+                ):
+                    discovered.add(api.strip())
+            print(f"  ✅ 从 {json_url.split('/')[3]}/{json_url.split('/')[-1]} 提取 {len([a for a in data.get('sites', []) if 'api' in a and ('xml' in a.get('api',''))])} 个接口")
+        except Exception as e:
+            print(f"  ⚠️ 跳过源 {json_url}: {e}")
+    print(f"[{datetime.now()}] GitHub 搜索完成，共发现 {len(discovered)} 个潜在接口")
+    return list(discovered)
+
+# 官方模板（自动修复 JSON 损坏）
 TEMPLATE_URL = "https://raw.githubusercontent.com/wwb521/live/refs/heads/main/video.json"
 
 def load_template():
-    """增强加载：本地损坏或不存在时自动从官方拉取完整模板"""
     if os.path.exists("video.json"):
         try:
             with open("video.json", "r", encoding="utf-8") as f:
@@ -58,27 +64,20 @@ def load_template():
             print("✅ 从本地 video.json 加载模板成功")
             return data
         except json.JSONDecodeError as e:
-            print(f"⚠️ 本地 video.json 损坏 ({e}) → 自动从官方模板拉取")
+            print(f"⚠️ 本地 video.json 损坏 ({e}) → 自动拉取")
         except Exception as e:
-            print(f"⚠️ 本地加载异常 ({e}) → 自动拉取")
-
-    print("📥 从官方模板拉取最新 video.json...")
-    try:
-        resp = requests.get(TEMPLATE_URL, timeout=30)
-        resp.raise_for_status()
-        data = resp.json()
-        with open("video.json", "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-        print("✅ 已自动修复并保存官方模板")
-        return data
-    except Exception as e:
-        raise RuntimeError(f"❌ 无法加载模板: {e}\n请手动下载 {TEMPLATE_URL} 并上传为 video.json") from e
+            print(f"⚠️ 本地异常 ({e}) → 自动拉取")
+    print("📥 从官方模板拉取...")
+    resp = requests.get(TEMPLATE_URL, timeout=30)
+    resp.raise_for_status()
+    data = resp.json()
+    with open("video.json", "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    print("✅ 已自动修复并保存官方模板")
+    return data
 
 def test_api(api_url: str) -> bool:
-    """测试接口是否可用（TVBox 常用 XML/RSS 结构校验）"""
-    headers = {
-        "User-Agent": "Mozilla/5.0 (compatible; TVBox-Bot/1.0; +https://github.com/your-repo)"
-    }
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; TVBox-Bot/1.0; +https://github.com/your-repo)"}
     try:
         resp = requests.get(api_url, headers=headers, timeout=15)
         if resp.status_code != 200:
@@ -86,14 +85,10 @@ def test_api(api_url: str) -> bool:
         content = resp.text.strip()
         if not content or not content.startswith("<"):
             return False
-
         try:
             root = ET.fromstring(content.encode("utf-8"))
-            if (root.tag == "rss" or 
-                root.find("channel") is not None or 
-                root.findall(".//category") or 
-                root.findall(".//video") or 
-                root.findall(".//list")):
+            if (root.tag == "rss" or root.find("channel") is not None or
+                root.findall(".//category") or root.findall(".//video") or root.findall(".//list")):
                 return True
         except ParseError:
             lower = content.lower()
@@ -105,21 +100,29 @@ def test_api(api_url: str) -> bool:
         return False
 
 # ==================== 主逻辑 ====================
-print(f"[{datetime.now()}] 开始每日色情接口更新...")
+print(f"[{datetime.now()}] 开始每日色情接口更新（含 GitHub 智能搜索）...")
 
-# 1. 加载模板（自动修复 JSON 错误）
+# 1. 加载模板
 data = load_template()
 
-# 2. 去重 + 测试所有候选 + 原有 sites
+# 2. 智能发现所有候选接口
+github_apis = discover_apis_from_github_sources()
+candidates_from_txt = []
+if os.path.exists("candidates.txt"):
+    with open("candidates.txt", "r", encoding="utf-8") as f:
+        candidates_from_txt = [line.strip() for line in f if line.strip() and not line.startswith("#")]
+    print(f"从 candidates.txt 读取 {len(candidates_from_txt)} 个额外接口")
+
+all_candidates = HARDCODED + github_apis + candidates_from_txt
+
+# 3. 去重 + 测试 + 生成 sites
 seen = set()
 working_sites = []
-
-for item in data.get("sites", []) + [{"api": url} for url in CANDIDATES]:
+for item in data.get("sites", []) + [{"api": url} for url in all_candidates]:
     api = item.get("api") if isinstance(item, dict) else item
     if not api or api in seen:
         continue
     seen.add(api)
-
     print(f"测试接口: {api}")
     if test_api(api):
         site_dict = {
@@ -136,11 +139,9 @@ for item in data.get("sites", []) + [{"api": url} for url in CANDIDATES]:
         working_sites.append(site_dict)
         print(f"✅ 可用: {api}")
 
-# 3. 更新 sites（只保留可用）
+# 4. 更新并保存
 data["sites"] = working_sites
-
-# 4. 写回文件（保持原始格式）
 with open("video.json", "w", encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False, indent=2)
 
-print(f"✅ 更新完成！当前可用色情接口数量: {len(working_sites)}")
+print(f"✅ 更新完成！当前可用色情接口数量: {len(working_sites)}（GitHub 智能搜索贡献 {len(github_apis)} 个候选）")
