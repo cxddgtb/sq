@@ -175,35 +175,37 @@ for item in data.get("sites", []) + all_candidates:
         working_sites.append(site_dict)
         print(f"✅ 可用: {api} → {name}")
 
+# ...（前面的 HARDCODED、discover_apis_from_github_sources、load_template、test_api 等保持不变）
+
+# ==================== 主逻辑末尾替换为下面新版 ====================
+# ...（working_sites 生成部分不变）
+
 data["sites"] = working_sites
 
 # 保存 video.json
 with open("video.json", "w", encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False, indent=2)
-print(f"✅ video.json 已保存！可用接口数量: {len(working_sites)}")
 
-# 生成 index.js（CatVod 专用）
+# 生成 index.js
 index_js_content = f'var config = {json.dumps(data, ensure_ascii=False)};\n'
 with open("index.js", "w", encoding="utf-8") as f:
     f.write(index_js_content)
-print("✅ index.js 已生成")
 
 # 生成 index.js.md5
 md5_hash = hashlib.md5(index_js_content.encode("utf-8")).hexdigest()
 with open("index.js.md5", "w", encoding="utf-8") as f:
     f.write(md5_hash)
-print(f"✅ index.js.md5 已生成（MD5: {md5_hash}）")
 
-# ==================== 输出 GitHub raw 直链（核心升级）===================
-repo = os.getenv("GITHUB_REPOSITORY", "你的用户名/你的仓库名")  # Actions 自动填充
+# ==================== 新增：输出多套加速链接 ====================
+repo = os.getenv("GITHUB_REPOSITORY", "cxddgtb/sq")
 branch = os.getenv("GITHUB_REF_NAME", "main")
-raw_url = f"https://raw.githubusercontent.com/{repo}/refs/heads/{branch}/index.js.md5"
-proxy_url = f"https://ghproxy.com/{raw_url}"
+raw_base = f"https://raw.githubusercontent.com/{repo}/{branch}"
 
-print("\n🎉 === 最终可直接使用的地址（复制到 TVBox / 猫影视即可）===")
-print(f"✅ GitHub 官方直链（推荐）：{raw_url}")
-print(f"🌍 国内加速版（ghproxy）：{proxy_url}")
-print("   → 把上面任意一个地址粘贴到猫影视「配置地址」即可！")
-print("   → 每日自动更新，无需服务器，无需手动上传！")
+print("\n🎉 === Mira Play 专属可用地址（直接复制）===")
+print(f"✅ 官方 raw（推荐先试）: {raw_base}/index.js.md5")
+print(f"🚀 ghproxy 加速1: https://ghproxy.com/{raw_base}/index.js.md5")
+print(f"🚀 ghproxy 加速2: https://ghproxy.net/{raw_base}/index.js.md5")
+print(f"🚀 备用加速: https://gitproxy.click/{raw_base}/index.js.md5")
+print("\n把上面任意一个地址粘贴到 Mira Play 配置地址即可！")
 
-print(f"\n✅ 所有文件已自动 push 到你的仓库，刷新 https://github.com/{repo} 即可看到 video.json / index.js / index.js.md5")
+print(f"\n当前可用成人接口数量: {len([s for s in working_sites if '资源' in s.get('name','') or '成人' in s.get('name','') or '未知成人源' in s.get('name','')])}")
