@@ -57,15 +57,6 @@
       "filterable": 1
     },
     {
-      "key": "api.bwzyz.com",
-      "name": "api.bwzyz.com",
-      "type": 0,
-      "api": "https://api.bwzyz.com/api.php/provide/vod/at/xml/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
       "key": "haiwaikan.com",
       "name": "haiwaikan.com",
       "type": 0,
