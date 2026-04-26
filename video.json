@@ -273,15 +273,6 @@
       "filterable": 1
     },
     {
-      "key": "aosikazy.com",
-      "name": "aosikazy.com",
-      "type": 0,
-      "api": "https://aosikazy.com/api.php/provide/vod/at/xml/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
       "key": "tyyszyapi.com",
       "name": "tyyszyapi.com",
       "type": 0,
