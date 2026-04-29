@@ -57,15 +57,6 @@
       "filterable": 1
     },
     {
-      "key": "haiwaikan.com",
-      "name": "haiwaikan.com",
-      "type": 0,
-      "api": "https://haiwaikan.com/api.php/provide/vod",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
       "key": "Naixxzy.com",
       "name": "Naixxzy.com",
       "type": 0,
