@@ -120,15 +120,6 @@
       "filterable": 1
     },
     {
-      "key": "fqzy.me",
-      "name": "fqzy.me",
-      "type": 0,
-      "api": "https://fqzy.me//api.php/provide/vod/at/xml/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
       "key": "bfzyapi.com",
       "name": "bfzyapi.com",
       "type": 0,
