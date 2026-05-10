@@ -447,15 +447,6 @@
       "key": "未知成人源",
       "name": "未知成人源",
       "type": 0,
-      "api": "https://api.suboapi.com/api.php/provide/vod/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
-      "key": "未知成人源",
-      "name": "未知成人源",
-      "type": 0,
       "api": "https://www.leyuzyapi.com/inc/apijson_vod.php",
       "searchable": 1,
       "quickSearch": 1,
@@ -466,6 +457,15 @@
       "name": "芒果18+(动漫)",
       "type": 0,
       "api": "https://mgzyz1.com/api.php/provide/vod/?ac=list",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "key": "未知成人源",
+      "name": "未知成人源",
+      "type": 0,
+      "api": "https://api.suboapi.com/api.php/provide/vod/",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1
