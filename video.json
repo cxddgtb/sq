@@ -120,15 +120,6 @@
       "filterable": 1
     },
     {
-      "key": "bfzyapi.com",
-      "name": "bfzyapi.com",
-      "type": 0,
-      "api": "https://bfzyapi.com/api.php/provide/vod/at/xml/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
       "key": "m3u8.apiyhzy.com",
       "name": "m3u8.apiyhzy.com",
       "type": 0,
