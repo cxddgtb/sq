@@ -48,15 +48,6 @@
       "filterable": 1
     },
     {
-      "key": "Naixxzy.com",
-      "name": "Naixxzy.com",
-      "type": 0,
-      "api": "https://Naixxzy.com/api.php/provide/vod/at/xml/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
       "key": "api.suboapi.com",
       "name": "api.suboapi.com",
       "type": 0,
