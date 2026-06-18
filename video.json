@@ -147,15 +147,6 @@
       "filterable": 1
     },
     {
-      "key": "caiji.dbzy5.com",
-      "name": "caiji.dbzy5.com",
-      "type": 0,
-      "api": "https://caiji.dbzy5.com/api.php/provide/vod/at/xml/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
       "key": "api.ffzyapi.com",
       "name": "api.ffzyapi.com",
       "type": 0,
@@ -390,15 +381,6 @@
       "filterable": 1
     },
     {
-      "key": "*CK资源",
-      "name": "*CK资源",
-      "type": 0,
-      "api": "http://www.feifei67.com/api.php/provide/vod/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
       "key": "未知成人源",
       "name": "未知成人源",
       "type": 0,
@@ -430,6 +412,15 @@
       "name": "未知成人源",
       "type": 0,
       "api": "https://www.leyuzyapi.com/inc/apijson_vod.php",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "key": "成人27",
+      "name": "成人27",
+      "type": 0,
+      "api": "https://www.mgav1.cc/api.php/provide/vod/at/xml",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1
