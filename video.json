@@ -48,15 +48,6 @@
       "filterable": 1
     },
     {
-      "key": "jszyapi.com",
-      "name": "jszyapi.com",
-      "type": 0,
-      "api": "https://jszyapi.com/api.php/provide/vod/at/xml/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
       "key": "cj.yayazy.net",
       "name": "cj.yayazy.net",
       "type": 0,
@@ -403,6 +394,15 @@
       "name": "成人27",
       "type": 0,
       "api": "https://www.mgav1.cc/api.php/provide/vod/at/xml",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "key": "未知成人源",
+      "name": "未知成人源",
+      "type": 0,
+      "api": "https://caiji.523zyw.com/inc/apijson_vod.php",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1
