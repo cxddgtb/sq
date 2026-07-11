@@ -381,19 +381,19 @@
       "filterable": 1
     },
     {
-      "key": "辣椒",
-      "name": "辣椒",
+      "key": "未知成人源",
+      "name": "未知成人源",
       "type": 0,
-      "api": "https://apilj.com/api.php/provide/vod/at/xml/",
+      "api": "https://caiji.523zyw.com/inc/apijson_vod.php",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1
     },
     {
-      "key": "未知成人源",
-      "name": "未知成人源",
+      "key": "辣椒",
+      "name": "辣椒",
       "type": 0,
-      "api": "https://caiji.523zyw.com/inc/apijson_vod.php",
+      "api": "https://apilj.com/api.php/provide/vod/at/xml/",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1
