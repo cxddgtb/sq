@@ -258,15 +258,6 @@
       "key": "未知成人源",
       "name": "未知成人源",
       "type": 0,
-      "api": "https://siwazyw.cc/api.php/provide/vod/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
-      "key": "未知成人源",
-      "name": "未知成人源",
-      "type": 0,
       "api": "http://fhapi9.com/api.php/provide/vod/at/xml/",
       "searchable": 1,
       "quickSearch": 1,
@@ -336,15 +327,6 @@
       "filterable": 1
     },
     {
-      "key": "(18+)速播资源",
-      "name": "(18+)速播资源",
-      "type": 0,
-      "api": "http://api.suboapi.com/api.php/provide/vod/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
       "key": "未知成人源",
       "name": "未知成人源",
       "type": 0,
@@ -394,6 +376,24 @@
       "name": "辣椒",
       "type": 0,
       "api": "https://apilj.com/api.php/provide/vod/at/xml/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "key": "(18+)速播资源",
+      "name": "(18+)速播资源",
+      "type": 0,
+      "api": "http://api.suboapi.com/api.php/provide/vod/",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "key": "成人27",
+      "name": "成人27",
+      "type": 0,
+      "api": "https://www.mgav1.cc/api.php/provide/vod/at/xml",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1
