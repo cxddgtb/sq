@@ -21,15 +21,6 @@
       }
     },
     {
-      "key": "cj.rycjapi.com",
-      "name": "cj.rycjapi.com",
-      "type": 0,
-      "api": "https://cj.rycjapi.com/api.php/provide/vod/at/xml/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
       "key": "mdzyapi.com",
       "name": "mdzyapi.com",
       "type": 0,
@@ -124,15 +115,6 @@
       "name": "hsckzy888.com",
       "type": 0,
       "api": "https://hsckzy888.com/api.php/provide/vod/at/xml/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
-      "key": "api.ffzyapi.com",
-      "name": "api.ffzyapi.com",
-      "type": 0,
-      "api": "http://api.ffzyapi.com/api.php/provide/vod/at/xml/",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1
@@ -291,15 +273,6 @@
       "filterable": 1
     },
     {
-      "key": "非凡",
-      "name": "非凡",
-      "type": 0,
-      "api": "http://cj.ffzyapi.com/api.php/provide/vod/at/xml/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
       "key": "未知成人源",
       "name": "未知成人源",
       "type": 0,
@@ -376,15 +349,6 @@
       "name": "成人27",
       "type": 0,
       "api": "https://www.mgav1.cc/api.php/provide/vod/at/xml",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
-      "key": "未知成人源",
-      "name": "未知成人源",
-      "type": 0,
-      "api": "https://caiji.523zyw.com/inc/apijson_vod.php",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1
