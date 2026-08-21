@@ -21,15 +21,6 @@
       }
     },
     {
-      "key": "mdzyapi.com",
-      "name": "mdzyapi.com",
-      "type": 0,
-      "api": "https://www.mdzyapi.com/api.php/provide/vod/at/xml/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
       "key": "apilsbzy1.com",
       "name": "apilsbzy1.com",
       "type": 0,
