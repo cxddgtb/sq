@@ -21,15 +21,6 @@
       }
     },
     {
-      "key": "apilsbzy1.com",
-      "name": "apilsbzy1.com",
-      "type": 0,
-      "api": "https://apilsbzy1.com/api.php/provide/vod/at/xml/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
       "key": "cj.yayazy.net",
       "name": "cj.yayazy.net",
       "type": 0,
@@ -115,15 +106,6 @@
       "name": "apidanaizi.com",
       "type": 0,
       "api": "https://apidanaizi.com/api.php/provide/vod/at/xml/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
-      "key": "apiyutu.com",
-      "name": "apiyutu.com",
-      "type": 0,
-      "api": "https://apiyutu.com/api.php/provide/vod/at/xml/",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1
