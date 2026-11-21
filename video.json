@@ -66,15 +66,6 @@
       "filterable": 1
     },
     {
-      "key": "hsckzy888.com",
-      "name": "hsckzy888.com",
-      "type": 0,
-      "api": "https://hsckzy888.com/api.php/provide/vod/at/xml/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
       "key": "dadiapi.com",
       "name": "dadiapi.com",
       "type": 0,
